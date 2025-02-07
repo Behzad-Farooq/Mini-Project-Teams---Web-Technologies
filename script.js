@@ -1,6 +1,89 @@
 // Cart state management
 let cart = [];
 
+// Modify handleCheckout function to redirect to checkout page
+function handleCheckout() {
+    if (cart.length === 0) {
+        showNotification('Your cart is empty');
+        return;
+    }
+    window.location.href = 'checkout.html';
+}
+
+// Render checkout table in flipkart style
+function renderCheckoutTable() {
+    const checkoutTable = document.getElementById('checkout-table');
+    if (!checkoutTable) return;
+
+    const tbody = checkoutTable.querySelector('tbody');
+    tbody.innerHTML = cart.map((item, index) => `
+        <tr>
+            <td>${index + 1}</td>
+            <td>
+                <img src="${item.image}" alt="${item.name}" style="width: 80px; height: auto;">
+            </td>
+            <td>${item.name}</td>
+            <td>${item.quantity}</td>
+            <td>₹${item.price}</td>
+            <td>₹${(item.price * item.quantity).toFixed(2)}</td>
+            <td>
+                <a href="#" onclick="showEditModal('${item.id}'); return false;">Edit</a> |
+                <a href="#" onclick="showDetails('${item.id}'); return false;">Details</a> |
+                <a href="#" onclick="removeFromCheckout('${item.id}'); return false;">X</a>
+            </td>
+        </tr>
+    `).join('');
+
+    // Add total amount below the table
+    const totalDiv = document.createElement('div');
+    totalDiv.className = 'checkout-total';
+    const total = calculateTotal();
+    totalDiv.innerHTML = `
+        <div class="total-section">
+            <h3>Total Amount: ₹${total.toFixed(2)}</h3>
+            <div class="checkout-buttons">
+                <button onclick="handlePlaceOrder()" class="btn place-order-btn">Place Order</button>
+                <button onclick="window.location.href='shop.html'" class="btn continue-shopping-btn">Continue Shopping</button>
+            </div>
+        </div>
+    `;
+    
+    // Insert total div after the table
+    checkoutTable.parentNode.insertBefore(totalDiv, checkoutTable.nextSibling);
+}
+
+
+// Remove item from checkout
+function removeFromCheckout(id) {
+    removeFromCart(id);
+    renderCheckoutTable();
+    if (cart.length === 0) {
+        window.location.href = 'cart.html';
+    }
+}
+
+// Handle place order
+function handlePlaceOrder() {
+    if (cart.length === 0) {
+        showNotification('Your cart is empty');
+        return;
+    }
+
+    const orderNumber = 'OD' + Math.random().toString().slice(2, 11);
+    cart = [];
+    saveCart();
+
+    const main = document.querySelector('main');
+    main.innerHTML = `
+        <div class="order-success">
+            <h1>Your Order has been placed successfully</h1>
+            <p>Your order number is ${orderNumber}</p>
+            <p class="thank-you">Thank you for shopping with us!</p>
+            <button onclick="window.location.href='shop.html'" class="btn">Continue Shopping</button>
+        </div>
+    `;
+}
+
 // Load cart from localStorage on page load
 document.addEventListener('DOMContentLoaded', () => {
     const savedCart = localStorage.getItem('cart');
@@ -15,6 +98,9 @@ document.addEventListener('DOMContentLoaded', () => {
             link.innerHTML = `Cart (${count})`;
         }
     });
+    if (document.getElementById('checkout-table')) {
+        renderCheckoutTable();
+    }
 });
 
 // Save cart to localStorage
@@ -64,6 +150,7 @@ function addToCart(id, name, price, image, description) {
             image,
             description,
             quantity: 1
+
         });
     }
     
@@ -105,36 +192,6 @@ function showDetails(id) {
     `;
 }
 
-// Show edit quantity modal
-// function showEditModal(id) {
-//     const item = cart.find(item => item.id === id);
-//     if (!item) return;
-
-//     // Create modal overlay
-//     const modal = document.createElement('div');
-//     modal.className = 'edit-modal-overlay';
-//     modal.innerHTML = `
-//         <div class="edit-modal">
-//             <h2>Edit Product Item</h2>
-//             <div class="modal-content">
-//                 <img src="${item.image}" alt="${item.name}" class="modal-image">
-//                 <div class="modal-details">
-//                     <p>Name: ${item.name}</p>
-//                     <p>Price: ₹${item.price}</p>
-//                     <div class="quantity-control">
-//                         <label for="quantity">Quantity:</label>
-//                         <input type="number" id="quantity" value="${item.quantity}" min="1">
-//                     </div>
-//                     <div class="modal-buttons">
-//                         <button onclick="updateItemQuantity('${id}')" class="btn update-btn">Update</button>
-//                         <button onclick="closeEditModal()" class="btn back-btn">Back</button>
-//                     </div>
-//                 </div>
-//             </div>
-//         </div>
-//     `;
-//     document.body.appendChild(modal);
-// }
 
 function showEditModal(id) {
     const item = cart.find(item => item.id === id);
@@ -264,27 +321,27 @@ function showNotification(message) {
 }
 
 // Handle checkout
-function handleCheckout() {
-    if (cart.length === 0) {
-        showNotification('Your cart is empty');
-        return;
-    }
+// function handleCheckout() {
+//     if (cart.length === 0) {
+//         showNotification('Your cart is empty');
+//         return;
+//     }
     
-    const orderNumber = 'OD' + Math.random().toString().slice(2, 11);
+//     const orderNumber = 'OD' + Math.random().toString().slice(2, 11);
     
-    cart = [];
-    saveCart();
+//     cart = [];
+//     saveCart();
     
-    const main = document.querySelector('main');
-    main.innerHTML = `
-        <div class="order-success">
-            <h1>Your Order has been placed successfully</h1>
-            <p>Your order number is ${orderNumber}</p>
-            <p class="thank-you">Thank you</p>
-            <button onclick="window.location.href='shop.html'" class="btn">Continue Shopping</button>
-        </div>
-    `;
-}
+//     const main = document.querySelector('main');
+//     main.innerHTML = `
+//         <div class="order-success">
+//             <h1>Your Order has been placed successfully</h1>
+//             <p>Your order number is ${orderNumber}</p>
+//             <p class="thank-you">Thank you</p>
+//             <button onclick="window.location.href='shop.html'" class="btn">Continue Shopping</button>
+//         </div>
+//     `;
+// }
 
 // Initialize page
 document.addEventListener('DOMContentLoaded', () => {
