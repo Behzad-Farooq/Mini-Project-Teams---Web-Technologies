@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cart</title>
+    <title>Checkout</title>
     <link rel="stylesheet" href="style.css">
     <script src="script.js" defer></script>
 </head>
@@ -26,14 +26,25 @@
         </nav>
     </header>
     <main>
-        <h1 class="h1">Your Cart</h1>
-        <div id="cart-items" class="cart-items">
-        </div>
-        <div id="cart-total" class="cart-total">
-            Total: <span id="total-amount">0.00</span>
-        </div>
-        <div class="cart-buttons">
-            <button id="checkout-button" class="btn">Checkout</button>
+        <h1 class="h1">Checkout</h1>
+        <table border="1px" id="checkout-table" class="checkout-table">
+            <thead>
+                <tr>
+                    <th>S.No</th>
+                    <th>Name</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                    <th>Total Cost</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Checkout items will be dynamically added here -->
+            </tbody>
+        </table>
+        <div class="checkout-buttons">
+            <button id="place-order-button" class="btn">Place Order</button>
+            <button id="continue-shopping-button" class="btn">Continue Shopping</button>
         </div>
     </main>
     <footer>
