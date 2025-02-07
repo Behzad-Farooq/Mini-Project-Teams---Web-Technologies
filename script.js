@@ -34,7 +34,13 @@ function renderCheckoutTable() {
         </tr>
     `).join('');
 
-    // Add total amount below the table
+    // Remove any existing total section to prevent duplicates
+    const existingTotalDiv = document.querySelector('.checkout-total');
+    if (existingTotalDiv) {
+        existingTotalDiv.remove();
+    }
+
+    // Create and append new total section below the table
     const totalDiv = document.createElement('div');
     totalDiv.className = 'checkout-total';
     const total = calculateTotal();
@@ -48,19 +54,23 @@ function renderCheckoutTable() {
         </div>
     `;
     
-    // Insert total div after the table
+    // Insert totalDiv after the checkout table
     checkoutTable.parentNode.insertBefore(totalDiv, checkoutTable.nextSibling);
 }
 
-
-// Remove item from checkout
 function removeFromCheckout(id) {
     removeFromCart(id);
     renderCheckoutTable();
+    
+    // Ensure total is updated
+    const total = calculateTotal();
+    document.querySelector(".checkout-total h3").textContent = `Total Amount: ₹${total.toFixed(2)}`;
+
     if (cart.length === 0) {
         window.location.href = 'cart.html';
     }
 }
+
 
 // Handle place order
 function handlePlaceOrder() {
