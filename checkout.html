@@ -6,6 +6,50 @@
     <title>Checkout</title>
     <link rel="stylesheet" href="style.css">
     <script src="script.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .checkout-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        .checkout-table th, .checkout-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+            width: 160px;
+            height: 50px ;
+        }
+        .checkout-table th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+        .checkout-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        .checkout-table tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        .checkout-table img {
+            max-width: 100%;
+            max-height: 50px;
+            object-fit: contain;
+        }
+
+        .remove-item {
+            background-color: #ff4d4d;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+        .remove-item:hover {
+            background-color: #ff1a1a;
+        }
+    </style>
 </head>
 <body>
 
@@ -32,9 +76,10 @@
             <thead>
                 <tr>
                     <th>S.No</th>
+                    <th>Product</th>
                     <th>Name</th>
-                    <th>Price</th>
                     <th>Quantity</th>
+                    <th>Price</th>
                     <th>Total Cost</th>
                     <th>Actions</th>
                 </tr>
@@ -42,13 +87,36 @@
             <tbody>
             </tbody>
         </table>
-        <!-- <div class="checkout-buttons">
-            <button id="place-order-button" class="btn">Place Order</button>
-            <button id="continue-shopping-button" class="btn">Continue Shopping</button>
-        </div> -->
+       
     </main>
     <footer>
         <p>&copy; 2025 Mobile Shopping Store</p>
     </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const cartItems = [
+            ];
+
+            const tbody = document.querySelector('#checkout-table tbody');
+
+cartItems.forEach((item, index) => {
+    const row = document.createElement('tr');
+
+    row.innerHTML = `
+        <td>${index + 1}</td>
+        <td>${item.name}</td>
+        <td>$${item.price}</td>
+        <td>${item.quantity}</td>
+        <td>$${item.price * item.quantity}</td>
+        <td><button class="remove-item" data-id="${item.id}">Remove</button></td>
+    `;
+    
+    tbody.appendChild(row);
+            });
+        });
+    </script>
+
+
 </body>
 </html>
