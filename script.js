@@ -34,7 +34,13 @@ function renderCheckoutTable() {
         </tr>
     `).join('');
 
-    // Add total amount below the table
+    // Remove any existing total section to prevent duplicates
+    const existingTotalDiv = document.querySelector('.checkout-total');
+    if (existingTotalDiv) {
+        existingTotalDiv.remove();
+    }
+
+    // Create and append new total section below the table
     const totalDiv = document.createElement('div');
     totalDiv.className = 'checkout-total';
     const total = calculateTotal();
@@ -48,19 +54,23 @@ function renderCheckoutTable() {
         </div>
     `;
     
-    // Insert total div after the table
+    // Insert totalDiv after the checkout table
     checkoutTable.parentNode.insertBefore(totalDiv, checkoutTable.nextSibling);
 }
 
-
-// Remove item from checkout
 function removeFromCheckout(id) {
     removeFromCart(id);
     renderCheckoutTable();
+    
+    // Ensure total is updated
+    const total = calculateTotal();
+    document.querySelector(".checkout-total h3").textContent = `Total Amount: ₹${total.toFixed(2)}`;
+
     if (cart.length === 0) {
         window.location.href = 'cart.html';
     }
 }
+
 
 // Handle place order
 function handlePlaceOrder() {
@@ -108,6 +118,14 @@ function saveCart() {
     localStorage.setItem('cart', JSON.stringify(cart));
     updateCartCount();
 }
+
+// Update cart count in navigation
+// function updateCartCount() {
+//     const cartCount = document.getElementById('cart-count');
+//     if (cartCount) {
+//         cartCount.textContent = cart.reduce((total, item) => total + item.quantity, 0);
+//     }
+// }
 
 function updateCartCount() {
     const cartCount = document.getElementById('cart-count');
@@ -312,6 +330,28 @@ function showNotification(message) {
     }, 3000);
 }
 
+// Handle checkout
+// function handleCheckout() {
+//     if (cart.length === 0) {
+//         showNotification('Your cart is empty');
+//         return;
+//     }
+    
+//     const orderNumber = 'OD' + Math.random().toString().slice(2, 11);
+    
+//     cart = [];
+//     saveCart();
+    
+//     const main = document.querySelector('main');
+//     main.innerHTML = `
+//         <div class="order-success">
+//             <h1>Your Order has been placed successfully</h1>
+//             <p>Your order number is ${orderNumber}</p>
+//             <p class="thank-you">Thank you</p>
+//             <button onclick="window.location.href='shop.html'" class="btn">Continue Shopping</button>
+//         </div>
+//     `;
+// }
 
 // Initialize page
 document.addEventListener('DOMContentLoaded', () => {
@@ -342,5 +382,4 @@ document.addEventListener('DOMContentLoaded', () => {
     if (document.getElementById('cart-items')) {
         renderCart();
     }
-    
 });
