@@ -2,6 +2,7 @@
 body {
     margin: 0;
     font-family: Arial, sans-serif;
+    padding-top: 60px; 
 }
 
 header {
@@ -11,10 +12,16 @@ header {
 
 .nav {
     display: flex;
-    justify-content: space-between;
+    justify-content: space-evenly;
     align-items: center;
     padding: 20px 20px;
+    position: fixed;
+    background-color: #333;
+    width: 100%;
+    top: 0;
+   
 }
+ 
 
 .nav .search-bar {
     display: flex;
